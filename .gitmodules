@@ -1,0 +1,3 @@
+[submodule "dependencies/RaspberryPiAudio"]
+	path = dependencies/RaspberryPiAudio
+	url = https://github.com/glaumarkus/RaspberryPiAudio.git
