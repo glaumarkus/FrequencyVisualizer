@@ -1,27 +1,9 @@
 #pragma once
 
-#include <vector>
+
+#include "LED_common.h"
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
-#include <Audio.h>
-
-// constexpr int BINS = 25;
-constexpr int BINS = 40;
-constexpr int BIN_MARGIN = 2;
-constexpr float PI = 3.141592f;
-constexpr int FONT_SIZE = 15;
-
-// scale of grouping bins
-constexpr float SCALE_EXP = 1.45f;
-
-// max increase
-constexpr float MAX_INC = 0.3f;
-
-// max decrease
-constexpr float MAX_DECAY = -0.05f;
-
-// bins to skip
-constexpr int START = 5;
 
 
 
@@ -60,9 +42,11 @@ private:
     SDL_Renderer* m_renderer;
 
     // font specific
+    /*
     TTF_Font* m_font;
     SDL_Surface* m_fontsurface;
     SDL_Texture* m_fonttexture;
+    */
 
     // current state
     State m_state;
@@ -75,6 +59,13 @@ private:
 
     // last samples
     Audio::sample_block m_lastSamples;
+
+#ifdef __arm__
+
+    #include <wiringPiI2C.h>
+    #include <ws2811.h>
+
+#endif
 
 };
 

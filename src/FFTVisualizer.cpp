@@ -8,9 +8,11 @@ CApp::CApp(uint16_t width, uint16_t height, Audio::Streamer* streamer) :
 	m_stream(streamer->GetFFTSamples()),
     m_window(nullptr),
     m_renderer(nullptr),
+	/*
 	m_font(nullptr),
 	m_fontsurface(nullptr),
 	m_fonttexture(nullptr),
+	*/
     m_state(CApp::State::NotInitialized)
 {}
 
@@ -60,6 +62,7 @@ bool CApp::Initialize()
 	}
 
 	// render font & surface
+	/*
 	TTF_Init();
 	m_font = TTF_OpenFont("/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf", FONT_SIZE);
 	if (!m_font)
@@ -69,6 +72,7 @@ bool CApp::Initialize()
 	}
 	m_fontsurface = TTF_RenderText_Solid(m_font, "20 - 50   50 - 150   150 - 250", SDL_Color{255,255,255});
 	m_fonttexture = SDL_CreateTextureFromSurface(m_renderer, m_fontsurface);
+	*/
 
 	// Update State
 	m_state = State::ReadyToRun;
@@ -135,7 +139,6 @@ void CApp::Render()
 	int bar_height = m_heigth - (2 * BIN_MARGIN);
 
 	// Set for later drawing
-	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
 	SDL_Rect bin_rect{
 		BIN_MARGIN,	// x 
 		BIN_MARGIN, // y
@@ -246,9 +249,11 @@ void CApp::Render()
 void CApp::Stop()
 {	
 	// Delete texture
+	/*
 	SDL_FreeSurface(m_fontsurface);
 	SDL_DestroyTexture(m_fonttexture);
-	
+	*/
+
 	// Stop SDL
 	SDL_DestroyRenderer(m_renderer);
 	SDL_DestroyWindow(m_window);

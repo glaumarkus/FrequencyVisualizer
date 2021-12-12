@@ -25,7 +25,12 @@ find_package(SDL2_ttf REQUIRED)
 
 
 # add executable
-add_executable(${TARGET} app.cpp src/FFTVisualizer.cpp)
+add_executable(
+    ${TARGET} 
+    app.cpp 
+    src/FFTVisualizer.cpp
+    #src/Color.cpp
+    )
 
 # set includes
 target_include_directories(
