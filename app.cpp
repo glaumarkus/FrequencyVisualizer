@@ -17,19 +17,9 @@ int main()
 
     // Initialize Audio Stream
     Audio::Streamer streamer(device);
-    tsqueue<Audio::sample_block> stream;
-    stream.push_back(Audio::sample_block{
-        0.1, 1.0, 0.2, 
-        0.2, 0.7, 0.3, 
-        0.1, 0.5, 0.4, 
-        0.32, 0.3, 0.5, 
-        0.24, 0.1, 0.8,
-        });
 
     // Initialize SDL Application
-    CApp app(1280, 768, streamer.GetFFTSamples());
-    //CApp app(400, 200, stream);
-    //CApp app(1280, 768, stream);
+    CApp app(800, 400, &streamer);
     if (app.Initialize())
     {
         // Start Audio Stream

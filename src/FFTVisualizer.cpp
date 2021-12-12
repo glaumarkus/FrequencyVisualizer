@@ -1,10 +1,11 @@
 #include <FFTVisualizer.h>
 
 
-CApp::CApp(uint16_t width, uint16_t height, tsqueue<Audio::sample_block>& stream) :
+CApp::CApp(uint16_t width, uint16_t height, Audio::Streamer* streamer) :
     m_width(width),
     m_heigth(height),
-	m_stream(stream),
+	m_streamer(streamer),
+	m_stream(streamer->GetFFTSamples()),
     m_window(nullptr),
     m_renderer(nullptr),
 	m_font(nullptr),
@@ -146,34 +147,33 @@ void CApp::Render()
 	std::vector<float> bins;
 	bins.reserve(BINS);
 
-	// wait until new sample available // this blocks from exiting.. 
-	m_stream.wait();
-
-	/*
-	if (m_stream.empty())
+	// check if streamer has correct state
+	if (m_streamer->GetState() != Audio::A_Recorder::State::Running)
 	{
 		auto mTicksCount = SDL_GetTicks();
 		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 32))
 		;
 		return;
 	}
-	*/
+
+	// wait until new sample available // this blocks from exiting.. 
+	m_stream.wait();
 
 	// pop sample
 	auto block = m_stream.pop_front();
 
 	// reduce to bins
 	int i = 0;
-	auto start = block.begin();
+	int start = 0;
+	int end;
 
 	// append max element for bin
 	while (i < BINS)
 	{
-		int num_samples_for_bin = static_cast<int>(std::pow(i + 1, SCALE_EXP));
-		auto end = start + num_samples_for_bin;
+		end = static_cast<int>(floorf(std::pow(i + 1, SCALE_EXP)));
 
 		bins.emplace_back(
-			*std::max_element(start, end)
+			*std::max_element(&block.at(start + START), &block.at(end + START))
 		);
 		start = end;
 		i++;
@@ -184,22 +184,6 @@ void CApp::Render()
 		m_lastSamples = bins;
 	else
 	{
-
-		/*
-		for (size_t i = 0; i < bins.size(); i++)
-		{
-			float delta = bins[i] - m_lastSamples[i];
-
-			// if delta bigger than 0, then only copy
-			if (delta > 0.0f)
-				m_lastSamples[i] = bins[i];
-			// if smaller gradually decrease
-			else if (delta < 0.0f)
-				m_lastSamples[i] += delta < -0.01f ? -0.01f : delta;
-			 
-		}
-		*/
-
 		std::transform(
 			m_lastSamples.begin(), m_lastSamples.end(),
 			bins.begin(),
@@ -210,9 +194,10 @@ void CApp::Render()
 				// if delta bigger than 0, then only copy
 				if (delta > 0.0f)
 					first = second;
+					//first += delta > MAX_INC ? MAX_INC : delta;
 				// if smaller gradually decrease
 				else if (delta < 0.0f)
-					first += delta < -0.01f ? -0.01f : delta;
+					first += delta < MAX_DECAY ? MAX_DECAY : delta;
 
 				return first;
 			}
