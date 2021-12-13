@@ -3,6 +3,7 @@
 
 #include "LED_common.h"
 #include <SDL2/SDL.h>
+#include "LEDVisualizer.h"
 
 
 class CApp
@@ -60,6 +61,9 @@ private:
 
 #ifdef __arm__
 
+    // HW Visualizer
+    //LEDVisualizer m_hw;
+    LEDVisualizer2 m_hw;
 
 #endif
 

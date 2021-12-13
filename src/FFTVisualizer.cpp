@@ -13,7 +13,9 @@ CApp::CApp(uint16_t width, uint16_t height, Audio::Streamer* streamer) :
 	m_fontsurface(nullptr),
 	m_fonttexture(nullptr),
 	*/
-    m_state(CApp::State::NotInitialized)
+    m_state(CApp::State::NotInitialized),
+	//m_hw(1.0f / 40.0f, 0.1f, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	m_hw(1.0f / 40.0f, 0.1f, {0, 1, 2, 3, 4, 5, 6})
 {}
 
 CApp::~CApp()
@@ -213,6 +215,13 @@ void CApp::Render()
 	{
 		// replace with actual value
 		const float& f = m_lastSamples[i];
+
+		// led strip		
+		if (i ==  0)
+		{
+			m_hw.ProcessInput(f);
+		}
+
 	
 		// heigth of bar
 		bin_rect.h = bar_height * f;
@@ -236,9 +245,8 @@ void CApp::Render()
 
 	}
 
-	// test text
-	// SDL_Rect msg_rect {0,0,m_width,20};
-	// SDL_RenderCopy(m_renderer, m_fonttexture, nullptr, &msg_rect);
+	// test led
+	m_hw.Render();
 
 	// swap buffers
 	SDL_RenderPresent(m_renderer);

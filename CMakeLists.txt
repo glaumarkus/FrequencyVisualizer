@@ -10,7 +10,6 @@ project(${TARGET} VERSION 0.1.0)
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/cmake)
 
-
 include(CTest)
 enable_testing()
 
@@ -22,13 +21,24 @@ add_subdirectory(
 # find SDL
 find_package(SDL2 REQUIRED)
 
-if (FALSE)
+if (TRUE)
 
 # add executable
 add_executable(
     ${TARGET} 
     app.cpp 
     src/FFTVisualizer.cpp
+    # internal
+    src/Color.cpp
+    src/LEDController.cpp
+    src/LEDVisualizer.cpp
+    # for rpi
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/dma.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/pwm.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/pcm.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/rpihw.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/ws2811.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/mailbox.c
     )
 
 # set includes
@@ -37,6 +47,7 @@ target_include_directories(
     ${SDL2_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/dependencies/RaspberryPiAudio/include
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x
 )
 
 # link 
@@ -48,10 +59,13 @@ target_link_libraries(
 
 endif()
 
+if (FALSE)
+
 # add executable
 add_executable(
     DEBUG 
     app2.cpp 
+    # internal
     src/Color.cpp
     src/LEDController.cpp
     src/LEDVisualizer.cpp
@@ -77,6 +91,8 @@ target_link_libraries(
     DEBUG PUBLIC
     AudioLib
 )
+
+endif()
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
