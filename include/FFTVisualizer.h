@@ -3,8 +3,6 @@
 
 #include "LED_common.h"
 #include <SDL2/SDL.h>
-#include <SDL_ttf.h>
-
 
 
 class CApp
@@ -62,8 +60,6 @@ private:
 
 #ifdef __arm__
 
-    #include <wiringPiI2C.h>
-    #include <ws2811.h>
 
 #endif
 

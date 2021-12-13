@@ -10,7 +10,7 @@
 #ifdef __arm__
 
 #include <wiringPiI2C.h>
-#include <ws2811.h>
+#include "../dependencies/rpi_ws281x/ws2811.h"
 
 #endif
 

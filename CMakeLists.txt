@@ -21,15 +21,14 @@ add_subdirectory(
 
 # find SDL
 find_package(SDL2 REQUIRED)
-find_package(SDL2_ttf REQUIRED)
 
+if (FALSE)
 
 # add executable
 add_executable(
     ${TARGET} 
     app.cpp 
     src/FFTVisualizer.cpp
-    #src/Color.cpp
     )
 
 # set includes
@@ -37,7 +36,7 @@ target_include_directories(
     ${TARGET} PUBLIC
     ${SDL2_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/dependencies/RaspberryPiAudio/include()
+    ${PROJECT_SOURCE_DIR}/dependencies/RaspberryPiAudio/include
 )
 
 # link 
@@ -45,7 +44,38 @@ target_link_libraries(
     ${TARGET} PUBLIC
     AudioLib
     ${SDL2_LIBRARIES} 
-    SDL2_ttf
+)
+
+endif()
+
+# add executable
+add_executable(
+    DEBUG 
+    app2.cpp 
+    src/Color.cpp
+    src/LEDController.cpp
+    src/LEDVisualizer.cpp
+    # for rpi
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/dma.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/pwm.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/pcm.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/rpihw.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/ws2811.c
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/mailbox.c
+)
+
+# set includes
+target_include_directories(
+    DEBUG PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x
+    ${PROJECT_SOURCE_DIR}/dependencies/RaspberryPiAudio/include
+)
+
+# link 
+target_link_libraries( 
+    DEBUG PUBLIC
+    AudioLib
 )
 
 

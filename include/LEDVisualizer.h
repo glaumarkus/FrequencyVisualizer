@@ -1,9 +1,7 @@
 #pragma once
 
 #include "common.h"
-
 #include "Color.h"
-#include "LEDController.h"
 
 constexpr int NUM_LEDS = 10;
 
@@ -14,7 +12,7 @@ public:
     LEDVisualizer(float position, float brightness, std::initializer_list<int> leds);
     ~LEDVisualizer();
 
-    void ProcessInput(const float& input);
+    void ProcessInput(float input);
     void Update();
     void Render();
 
