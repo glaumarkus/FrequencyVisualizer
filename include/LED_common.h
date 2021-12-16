@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include <vector>
+#include <initializer_list>
+#include <memory>
 
 // dependencies
 #include <Audio.h>
@@ -13,6 +15,9 @@
 #include "../dependencies/rpi_ws281x/ws2811.h"
 
 #endif
+
+// utility
+#include "Utility.h"
 
 
 // number of bars

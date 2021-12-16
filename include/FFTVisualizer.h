@@ -63,7 +63,8 @@ private:
 
     // HW Visualizer
     //LEDVisualizer m_hw;
-    LEDVisualizer2 m_hw;
+    //LEDVisualizer2 m_hw;
+    std::vector<LEDVisualizer2> m_visualizers;
 
 #endif
 

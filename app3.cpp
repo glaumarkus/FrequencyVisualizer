@@ -19,15 +19,15 @@ int main(int argc, char **argv)
     Audio::Streamer streamer(device);
 
     // Initialize LED Ensemble
-    CApp app(800, 400, &streamer);
+    Ensemble ensemble(&streamer);
 
-    if (app.Initialize())
+    if (ensemble.Initialize())
     {
         // Start Audio Stream
         streamer.Start();
 
-        // Start SDL Loop
-        app.Start();
+        // Start Ensemble Loop
+        ensemble.Start();
 
     }
 

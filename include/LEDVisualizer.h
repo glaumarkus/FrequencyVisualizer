@@ -3,6 +3,7 @@
 #include "common.h"
 #include "Color.h"
 
+
 constexpr int NUM_LEDS = 10;
 
 class LEDVisualizer
@@ -28,6 +29,7 @@ class LEDVisualizer2
 {
 public:
 
+    LEDVisualizer2(float position, float brightness, const std::vector<int>& leds);
     LEDVisualizer2(float position, float brightness, std::initializer_list<int> leds);
     ~LEDVisualizer2();
 
@@ -37,6 +39,7 @@ public:
 
 private:
 
+    bool m_flag = false;
     int m_center;
     std::vector<int> m_leds; 
     std::vector<Color> m_basecolors;

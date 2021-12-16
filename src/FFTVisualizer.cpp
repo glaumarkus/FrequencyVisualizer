@@ -1,4 +1,5 @@
 #include <FFTVisualizer.h>
+#include <LEDController.h>
 
 
 CApp::CApp(uint16_t width, uint16_t height, Audio::Streamer* streamer) :
@@ -13,10 +14,22 @@ CApp::CApp(uint16_t width, uint16_t height, Audio::Streamer* streamer) :
 	m_fontsurface(nullptr),
 	m_fonttexture(nullptr),
 	*/
-    m_state(CApp::State::NotInitialized),
+    m_state(CApp::State::NotInitialized)
 	//m_hw(1.0f / 40.0f, 0.1f, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
-	m_hw(1.0f / 40.0f, 0.1f, {0, 1, 2, 3, 4, 5, 6})
-{}
+	//m_hw(1.0f / 40.0f, 0.1f, {0, 1, 2, 3, 4, 5, 6})
+{
+	// add my 10 strips
+	m_visualizers.emplace_back(LEDVisualizer2(1.0f / 10, 0.5f, {0,19,20,39,40,59,60,79,80,99,100}));
+	m_visualizers.emplace_back(LEDVisualizer2(2.0f / 10, 0.5f, {1,18,21,38,41,58,61,78,81,98,101}));
+	m_visualizers.emplace_back(LEDVisualizer2(3.0f / 10, 0.5f, {2,17,22,37,42,57,62,77,82,97,102}));
+	m_visualizers.emplace_back(LEDVisualizer2(4.0f / 10, 0.5f, {3,16,23,36,43,56,63,76,83,96,103}));
+	m_visualizers.emplace_back(LEDVisualizer2(5.0f / 10, 0.5f, {4,15,24,35,44,55,64,75,84,95,104}));
+	m_visualizers.emplace_back(LEDVisualizer2(6.0f / 10, 0.5f, {5,14,25,34,45,54,65,74,85,94,105}));
+	m_visualizers.emplace_back(LEDVisualizer2(7.0f / 10, 0.5f, {6,13,26,33,46,53,66,73,86,93,106}));
+	m_visualizers.emplace_back(LEDVisualizer2(8.0f / 10, 0.5f, {7,12,27,32,47,52,67,72,87,92,107}));
+	m_visualizers.emplace_back(LEDVisualizer2(9.0f / 10, 0.5f, {8,11,28,31,48,51,68,71,88,91,108}));
+	m_visualizers.emplace_back(LEDVisualizer2(10.0f / 10, 0.5f, {9,10,29,30,49,50,69,70,89,90,109}));
+}
 
 CApp::~CApp()
 {
@@ -62,19 +75,6 @@ bool CApp::Initialize()
 		SDL_Log("Failed to create renderer: %s", SDL_GetError());
 		return false;
 	}
-
-	// render font & surface
-	/*
-	TTF_Init();
-	m_font = TTF_OpenFont("/usr/share/fonts/truetype/freefont/FreeMonoOblique.ttf", FONT_SIZE);
-	if (!m_font)
-	{
-		SDL_Log("Failed to load font: %s", SDL_GetError());
-		return false;
-	}
-	m_fontsurface = TTF_RenderText_Solid(m_font, "20 - 50   50 - 150   150 - 250", SDL_Color{255,255,255});
-	m_fonttexture = SDL_CreateTextureFromSurface(m_renderer, m_fontsurface);
-	*/
 
 	// Update State
 	m_state = State::ReadyToRun;
@@ -130,6 +130,9 @@ void CApp::Update()
 
 void CApp::Render()
 {
+
+	
+
 	// Clear background
 	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(m_renderer);
@@ -161,11 +164,17 @@ void CApp::Render()
 		return;
 	}
 
+	//t.Update("Waiting for Popping");
+
 	// wait until new sample available // this blocks from exiting.. 
 	m_stream.wait();
 
+	Timer t("Render Loop");
+
 	// pop sample
 	auto block = m_stream.pop_front();
+
+	t.Update("Popped");
 
 	// reduce to bins
 	int i = 0;
@@ -183,6 +192,8 @@ void CApp::Render()
 		start = end;
 		i++;
 	}
+
+	t.Update("Made bins");
 
 	// if empty, then this is first sample
 	if (m_lastSamples.empty())
@@ -209,6 +220,8 @@ void CApp::Render()
 		);
 		
 	}
+
+	t.Update("Transformed bins");
 	
 
 	for (int i = 0; i < BINS; i++)
@@ -217,12 +230,11 @@ void CApp::Render()
 		const float& f = m_lastSamples[i];
 
 		// led strip		
-		if (i ==  0)
+		if (i <  10)
 		{
-			m_hw.ProcessInput(f);
+			m_visualizers[i].ProcessInput(f);
 		}
 
-	
 		// heigth of bar
 		bin_rect.h = bar_height * f;
 
@@ -242,15 +254,19 @@ void CApp::Render()
 		// render
 		SDL_RenderFillRect(m_renderer, &bin_rect);
 
-
 	}
 
-	// test led
-	m_hw.Render();
+	t.Update("Rendered SDL");
+	for (auto& c : m_visualizers)
+		c.Render();
+	t.Update("Updated Visualizers");
+	led_controller.Render();
+	t.Update("Rendered visualizers");
 
 	// swap buffers
 	SDL_RenderPresent(m_renderer);
-	
+
+	//m_state = State::Stopped;
 
 }
 

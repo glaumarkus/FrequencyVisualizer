@@ -43,3 +43,6 @@ float ApplyLimit(const float& f, const float& lower, const float& upper);
 
 static Color Black(0.0f);
 static Color White(1.0f);
+
+static uint32_t uBlack = static_cast<uint32_t>(Black);
+static uint32_t uWhite = static_cast<uint32_t>(White);
