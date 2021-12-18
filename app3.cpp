@@ -10,7 +10,7 @@ int main(int argc, char **argv)
     if (argc > 1)
         device = argv[1];
     else
-        device = "hw:1,0";
+        device = "hw:2,0";
     
     std::cout << "[INFO] Starting Audio Streamer on device: " << device << std::endl;
 

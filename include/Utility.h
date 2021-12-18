@@ -6,6 +6,8 @@
 #include <sstream>
 #include <chrono>
 
+#include "Color.h"
+
 
 /*
 * Timer class

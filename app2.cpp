@@ -5,18 +5,23 @@
 int main()
 {
 
-    LEDController* controller = controller->Get();
-    
-    LEDVisualizer2 vis(1.0f / 40.0f, 0.1f, {0, 1, 2, 3, 4, 5, 6});
-    std::vector<float> tests {0.1, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99};
-
-    for (auto f : tests)
+    for (int i = 0; i < 21; i++)
     {
-        vis.ProcessInput(f);
-        vis.Render();
-        controller->Render();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        
+        LEDVisualizer2 vis(static_cast<float>(i) / 21.0f, 1.0f, {0, 1, 2, 3, 4, 5, 6, 7, 8});
+        std::vector<float> tests {1.0f};
+
+        for (auto f : tests)
+        {
+            vis.ProcessInput(f);
+            vis.Render();
+            auto controller = GetController();
+            controller->Render();
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+
     }
+
 
     return 0;
 }

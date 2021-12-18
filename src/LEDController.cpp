@@ -9,7 +9,7 @@ LEDController::LEDController()
     m_strip.channel[0].gpionum = GPIO_PIN;
     m_strip.channel[0].count = LED_COUNT;
     m_strip.channel[0].invert = 0;
-    m_strip.channel[0].brightness = 255;
+    m_strip.channel[0].brightness = 100;
     m_strip.channel[0].strip_type = STRIP_TYPE;
     m_strip.channel[1].gpionum = 0;
     m_strip.channel[1].count = 0;

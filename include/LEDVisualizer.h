@@ -39,7 +39,6 @@ public:
 
 private:
 
-    bool m_flag = false;
     int m_center;
     std::vector<int> m_leds; 
     std::vector<Color> m_basecolors;

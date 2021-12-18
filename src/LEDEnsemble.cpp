@@ -26,16 +26,16 @@ Ensemble::Ensemble(Audio::Streamer* streamer) :
 	std::vector<int> v8{8,11,28,31,48,51,68,71,88,91,108};
 	std::vector<int> v9{9,10,29,30,49,50,69,70,89,90,109};
 
-    m_visualizers.emplace_back(1.0f / 10, 0.5f, v0);
-	m_visualizers.emplace_back(2.0f / 10, 0.5f, v1);
-	m_visualizers.emplace_back(3.0f / 10, 0.5f, v2);
-	m_visualizers.emplace_back(4.0f / 10, 0.5f, v3);
-	m_visualizers.emplace_back(5.0f / 10, 0.5f, v4);
-	m_visualizers.emplace_back(6.0f / 10, 0.5f, v5);
-	m_visualizers.emplace_back(7.0f / 10, 0.5f, v6);
-	m_visualizers.emplace_back(8.0f / 10, 0.5f, v7);
-	m_visualizers.emplace_back(9.0f / 10, 0.5f, v8);
-	m_visualizers.emplace_back(10.0f / 10, 0.5f, v9);
+    m_visualizers.emplace_back(LEDVisualizer2(1.0f / 21, 1, v0));
+	m_visualizers.emplace_back(LEDVisualizer2(2.0f / 21, 1, v1));
+	m_visualizers.emplace_back(LEDVisualizer2(3.0f / 21, 1, v2));
+	m_visualizers.emplace_back(LEDVisualizer2(4.0f / 21, 1, v3));
+	m_visualizers.emplace_back(LEDVisualizer2(5.0f / 21, 1, v4));
+	m_visualizers.emplace_back(LEDVisualizer2(6.0f / 21, 1, v5));
+	m_visualizers.emplace_back(LEDVisualizer2(7.0f / 21, 1, v6));
+	m_visualizers.emplace_back(LEDVisualizer2(8.0f / 21, 1, v7));
+	m_visualizers.emplace_back(LEDVisualizer2(9.0f / 21, 1, v8));
+	m_visualizers.emplace_back(LEDVisualizer2(10.0f / 21, 1, v9));
 }
 
 Ensemble::~Ensemble()

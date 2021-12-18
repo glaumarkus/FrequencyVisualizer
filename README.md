@@ -7,3 +7,5 @@ ToDo:
 [x] add hw support 
 [] fix colors?
 [] build hardware
+[] extend setup to feature 21 x 9 
+
