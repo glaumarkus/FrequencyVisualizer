@@ -35,5 +35,5 @@ constexpr float MAX_DECAY = -0.05f;
 // bins to skip
 constexpr int START = 5;
 // scale of grouping bins
-constexpr float SCALE_EXP = 1.45f;
+constexpr float SCALE_EXP = 1.4f;
 

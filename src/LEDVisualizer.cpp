@@ -12,8 +12,17 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, std::initialize
     // set center
     m_center = m_leds.size() / 2;
 
-    // thats ok...
-    
+    Color viscolor(
+        cosf(PI / 2 * m_center / (m_center * 2)),                // r
+        sinf(PI  * position),                                    // g
+        cosf(PI  * position)                                     // b
+    );
+
+    for (auto& color : m_basecolors)
+        color = viscolor;
+
+    // thats ok...    
+    /*
     // make colors for LEDs
     for (int i = 0; i < m_center; i++)
     {
@@ -33,6 +42,7 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, std::initialize
         sinf(PI * position),                                    
         cosf(PI * position)
     );
+    */
 
     // test
     /*
@@ -63,6 +73,17 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, const std::vect
 
     // set center
     m_center = m_leds.size() / 2;
+
+    Color viscolor(
+        cosf(PI / 2 * m_center / (m_center * 2)),                // r
+        sinf(PI  * position),                                    // g
+        cosf(PI  * position)                                     // b
+    );
+
+    for (auto& color : m_basecolors)
+        color = viscolor;
+
+    /*
     
     // make colors for LEDs
     for (int i = 0; i < m_center; i++)
@@ -83,6 +104,7 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, const std::vect
         sinf(PI * position),                                    
         cosf(PI * position)
     );
+    */
 
         
     for (int i = 0; i < m_leds.size(); i++)
