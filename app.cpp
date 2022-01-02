@@ -1,34 +1,36 @@
-#include <FFTVisualizer.h>
+#include <configreader.h>
+#include <LEDController.h>
+#include <LEDEnsemble.h>
 
-// pass card & device to function, e.g. "hw:1,0" -> card 1, device 0
-//int main(int argc, char **argv)
-int main()
+// pass config files to function
+int main(int argc, char **argv)
 {
 
-    std::string device = "hw:1,0";
+    // Load LED Configuration
+    LEDConfiguration Lconfig;
+    Lconfig.LoadConfig("../config/led.conf");
 
-    /*    
-    if (argc > 1)
-        device = argv[1];
-    else
-        device = "hw:1,0";
-    */
+    // Initialize LED Controller
+    LEDController controller(Lconfig.numLeds, Lconfig.brightness);
 
-    std::cout << "[INFO] Starting Audio Streamer on device: " << device << std::endl;
-
+    // Load Audio Configuration
+    Audio::AudioConfiguration Aconfig;
+    Aconfig.LoadConfig("../config/audio.conf");
 
     // Initialize Audio Stream
-    Audio::Streamer streamer(device);
+    Audio::Streamer streamer(Aconfig);
 
-    // Initialize SDL Application
-    CApp app(800, 400, &streamer);
-    if (app.Initialize())
+    // Initialize LED Ensemble
+    Ensemble ensemble(Lconfig, controller, &streamer);
+
+    // Start threads
+    if (ensemble.Initialize())
     {
         // Start Audio Stream
         streamer.Start();
 
-        // Start SDL Loop
-        app.Start();
+        // Start Ensemble Loop
+        ensemble.Start();
 
     }
 

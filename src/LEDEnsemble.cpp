@@ -184,7 +184,7 @@ void Ensemble::Render()
 			m_lastSamples.begin(), m_lastSamples.end(),
 			bins.begin(),
 			m_lastSamples.begin(),
-			[m_config.max_dec](float first, float second)
+			[this](float first, float second)
 			{
 				float delta = second - first;
 				// if delta bigger than 0, then only copy
