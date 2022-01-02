@@ -2,9 +2,8 @@
 
 #include "common.h"
 #include "Color.h"
+#include "LEDController.h"
 
-
-constexpr int NUM_LEDS = 10;
 
 class LEDVisualizer
 {
@@ -29,8 +28,8 @@ class LEDVisualizer2
 {
 public:
 
-    LEDVisualizer2(float position, float brightness, const std::vector<int>& leds);
-    LEDVisualizer2(float position, float brightness, std::initializer_list<int> leds);
+    LEDVisualizer2(LEDController& controller, float position, const std::vector<int>& leds);
+    LEDVisualizer2(LEDController& controller, float position, std::initializer_list<int> leds);
     ~LEDVisualizer2();
 
     void ProcessInput(float input);
@@ -44,6 +43,7 @@ private:
     std::vector<int> m_leds; 
     std::vector<Color> m_basecolors;
     std::vector<uint32_t> m_rendercolors; 
+    LEDController& m_controller;
 
 };
 
