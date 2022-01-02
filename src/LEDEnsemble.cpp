@@ -2,16 +2,13 @@
 #include <LEDEnsemble.h>
 #include <LEDController.h>
 
-void my_handler(int s){
-           printf("Caught signal %d\n",s);
-           exit(1); 
 
-}
-
-Ensemble::Ensemble(Audio::Streamer* streamer) : 
+Ensemble::Ensemble(LEDConfiguration& config, LEDController& controller, Audio::Streamer* streamer) : 
     m_streamer(streamer),
     m_stream(streamer->GetFFTSamples()),
-    m_state(State::NotInitialized)
+    m_state(State::NotInitialized),
+	m_controller(controller),
+	m_config(config)
 {
 	
     // add visualizers
@@ -56,17 +53,46 @@ Ensemble::Ensemble(Audio::Streamer* streamer) :
 	std::vector<int> v38{38,41,118,121,198,201,278,281,358,361,438,441,518,521,598};
 	std::vector<int> v39{39,40,119,120,199,200,279,280,359,360,439,440,519,520,599};
 
-
-    m_visualizers.emplace_back(1.0f / 10, 0.5f, v0);
-	m_visualizers.emplace_back(2.0f / 10, 0.5f, v1);
-	m_visualizers.emplace_back(3.0f / 10, 0.5f, v2);
-	m_visualizers.emplace_back(4.0f / 10, 0.5f, v3);
-	m_visualizers.emplace_back(5.0f / 10, 0.5f, v4);
-	m_visualizers.emplace_back(6.0f / 10, 0.5f, v5);
-	m_visualizers.emplace_back(7.0f / 10, 0.5f, v6);
-	m_visualizers.emplace_back(8.0f / 10, 0.5f, v7);
-	m_visualizers.emplace_back(9.0f / 10, 0.5f, v8);
-	m_visualizers.emplace_back(10.0f / 10, 0.5f, v9);
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.03f, v0));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.05f, v1));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.07f, v2));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.1f, v3));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.12f, v4));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.15f, v5));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.17f, v6));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.2f, v7));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.23f, v8));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.25f, v9));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.28f, v10));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.3f, v11));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.33f, v12));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.35f, v13));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.38f, v14));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.4f, v15));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.42f, v16));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.45f, v17));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.47f, v18));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.5f, v19));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.53f, v20));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.55f, v21));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.57f, v22));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.6f, v23));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.62f, v24));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.65f, v25));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.68f, v26));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.7f, v27));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.72f, v28));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.75f, v29));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.78f, v30));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.8f, v31));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.82f, v32));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.85f, v33));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.88f, v34));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.9f, v35));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.93f, v36));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.95f, v37));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 0.97f, v38));
+	m_visualizers.emplace_back(LEDVisualizer2(m_controller, 1.0f, v39));
 }
 
 Ensemble::~Ensemble()
@@ -108,16 +134,7 @@ void Ensemble::Stop()
 {}
 
 void Ensemble::ProcessInput()
-{
-	/*
-    // check if CTRL+C
-    struct sigaction sigIntHandler;
-    sigIntHandler.sa_handler = my_handler;
-    sigemptyset(&sigIntHandler.sa_mask);
-    sigIntHandler.sa_flags = 0;
-    sigaction(SIGINT, &sigIntHandler, NULL);
-	*/
-}
+{}
 
 void Ensemble::Update()
 {}
@@ -130,7 +147,7 @@ void Ensemble::Render()
     bins.reserve(m_visualizers.size());
 
     // check state
-    if (m_streamer->GetState() != Audio::A_Recorder::State::Running)
+    if (m_streamer->GetState() != Audio::Recorder::State::Running)
 	{   
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		return;
@@ -149,18 +166,15 @@ void Ensemble::Render()
 	// append max element for bin
 	while (i < m_visualizers.size())
 	{
-		end = static_cast<int>(floorf(std::pow(i + 1, SCALE_EXP)));
+		end = static_cast<int>(floorf(std::pow(i + 1, m_config.exp)));
 
 		bins.emplace_back(
-			*std::max_element(&block.at(start + START), &block.at(end + START))
+			*std::max_element(&block.at(start + m_config.start), &block.at(end + m_config.start))
 		);
 		start = end;
 		i++;
 	}
 
-
-
-    
 	// if empty, then this is first sample
 	if (m_lastSamples.empty())
 		m_lastSamples = bins;
@@ -170,7 +184,7 @@ void Ensemble::Render()
 			m_lastSamples.begin(), m_lastSamples.end(),
 			bins.begin(),
 			m_lastSamples.begin(),
-			[](float first, float second)
+			[m_config.max_dec](float first, float second)
 			{
 				float delta = second - first;
 				// if delta bigger than 0, then only copy
@@ -178,14 +192,13 @@ void Ensemble::Render()
 					first = second;
 				// if smaller gradually decrease
 				else if (delta < 0.0f)
-					first += delta < MAX_DECAY ? MAX_DECAY : delta;
+					first += delta < m_config.max_dec ? m_config.max_dec : delta;
 
 				return first;
 			}
 		);
 		
 	}
-
 
 
     // process bins
@@ -195,13 +208,7 @@ void Ensemble::Render()
         m_visualizers[i].Render();
     }
     
-
-
     // render controller
-	auto controller = GetController();
-    controller->Render();
-
-
-
+	m_controller.Render();
 
 }

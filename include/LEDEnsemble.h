@@ -1,5 +1,6 @@
 #include "LED_common.h"
 #include "LEDVisualizer.h"
+#include "configreader.h"
 
 
 class Ensemble
@@ -14,7 +15,7 @@ public:
 		Stopped
     };
 
-    Ensemble(Audio::Streamer* streamer);
+    Ensemble(LEDConfiguration& config, LEDController& controller, Audio::Streamer* streamer);
     ~Ensemble();
 
     void AddVisualizer(const LEDVisualizer2& vis);
@@ -43,6 +44,12 @@ private:
 
     // visualizers
     std::vector<LEDVisualizer2> m_visualizers;
+
+    // controller
+    LEDController& m_controller;
+
+    // mutable config
+    LEDConfiguration& m_config;
 
 };
 

@@ -3,9 +3,10 @@
 #include <Utility.h>
 
 // odd
-LEDVisualizer2::LEDVisualizer2(float position, float brightness, std::initializer_list<int> leds) :
+LEDVisualizer2::LEDVisualizer2(LEDController& controller, float position, std::initializer_list<int> leds) :
     m_leds{leds},
-    m_center(0)
+    m_center(0),
+    m_controller(controller)
 {
     // set center
     m_center = m_leds.size() / 2;
@@ -32,11 +33,6 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, std::initialize
         sinf(PI / 2 * position),                                    
         cosf(PI / 2 * position)
     );
-
-
-    // apply brightness
-    for (auto& color : m_basecolors)
-        color *= brightness;
 
     // fill rendercolors
     for (int i = 0; i < m_leds.size(); i++)
@@ -45,9 +41,10 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, std::initialize
 }
 
 
-LEDVisualizer2::LEDVisualizer2(float position, float brightness, const std::vector<int>& leds) :
+LEDVisualizer2::LEDVisualizer2(LEDController& controller, float position, const std::vector<int>& leds) :
     m_leds(leds),
-    m_center(0)
+    m_center(0),
+    m_controller(controller)
 {
     // set center
     m_center = m_leds.size() / 2;
@@ -74,11 +71,6 @@ LEDVisualizer2::LEDVisualizer2(float position, float brightness, const std::vect
         sinf(PI / 2 * position),                                    
         cosf(PI / 2 * position)
     );
-
-
-    // apply brightness
-    for (auto& color : m_basecolors)
-        color *= brightness;
 
     // fill rendercolors
     for (int i = 0; i < m_leds.size(); i++)
@@ -128,9 +120,8 @@ void LEDVisualizer2::Update()
 
 void LEDVisualizer2::Render()
 {
-    auto controller = GetController();
     for (int i = 0; i < m_leds.size(); i++)
-        controller->ChangeLED(m_leds[i], m_rendercolors[i]);
+        m_controller.ChangeLED(m_leds[i], m_rendercolors[i]);
 }
 
 

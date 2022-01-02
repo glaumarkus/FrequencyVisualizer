@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     Lconfig.LoadConfig("../config/led.conf");
 
     // Initialize LED Controller
-    LEDController(Lconfig.numLeds, Lconfig.brightness);
+    LEDController controller(Lconfig.numLeds, Lconfig.brightness);
 
     // Load Audio Configuration
     Audio::AudioConfiguration Aconfig;
@@ -22,8 +22,9 @@ int main(int argc, char **argv)
     Audio::Streamer streamer(Aconfig);
 
     // Initialize LED Ensemble
-    Ensemble ensemble(&streamer);
+    Ensemble ensemble(Lconfig, controller, &streamer);
 
+    // Start threads
     if (ensemble.Initialize())
     {
         // Start Audio Stream
