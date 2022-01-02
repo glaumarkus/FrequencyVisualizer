@@ -27,6 +27,8 @@ add_executable(
     src/LEDController.cpp
     src/LEDVisualizer.cpp
     src/LEDEnsemble.cpp
+    src/SerialReader.cpp
+    src/SerialMessage.cpp
     # for rpi
     ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/dma.c
     ${PROJECT_SOURCE_DIR}/dependencies/rpi_ws281x/pwm.c
@@ -51,7 +53,6 @@ target_link_libraries(
     LED_VISUALIZER PUBLIC
     AudioLib
 )
-
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

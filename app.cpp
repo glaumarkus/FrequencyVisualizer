@@ -1,10 +1,23 @@
 #include <configreader.h>
 #include <LEDController.h>
 #include <LEDEnsemble.h>
+#include <SerialMessage.h>
+
+void process_message(float in)
+{
+    std::cout << "received value: " << in << "\n";
+}
 
 // pass config files to function
 int main(int argc, char **argv)
 {
+    
+    // Set up Serial Communication
+    MessageHandler handler;
+    handler.SetDevice(SerialReader::Device::Arduino);
+    handler.SetMessageHandler(Messages::AmbientModeMsg, process_message);
+    handler.Start();
+    
 
     // Load LED Configuration
     LEDConfiguration Lconfig;
