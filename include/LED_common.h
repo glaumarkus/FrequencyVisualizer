@@ -7,6 +7,7 @@
 
 // dependencies
 #include <Audio.h>
+#include "Utility.h"
 
 // external
 #ifdef __arm__
@@ -16,14 +17,6 @@
 
 #endif
 
-// utility
-#include "Utility.h"
-
-
-// number of bars
-constexpr int BINS = 40;
-// pixelbuffer of bar
-constexpr int BIN_MARGIN = 2;
 
 // for calculating colors
 constexpr float PI = 3.141592f;
@@ -32,6 +25,7 @@ constexpr float PI = 3.141592f;
 constexpr float MAX_INC = 0.3f;
 // max decrease
 constexpr float MAX_DECAY = -0.05f;
+
 // bins to skip
 constexpr int START = 5;
 // scale of grouping bins
