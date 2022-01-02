@@ -1,32 +1,49 @@
-#include <FFTVisualizer.h>
+#include <configreader.h>
+#include <LEDController.h>
+#include <LEDEnsemble.h>
+#include <SerialMessage.h>
 
-// pass card & device to function, e.g. "hw:1,0" -> card 1, device 0
-// int main(int argc, char **argv)
-int main()
+void process_message(float in)
 {
+    std::cout << "received value: " << in << "\n";
+}
 
-    std::string device = "hw:1,0";
-    /*
-    if (argc > 1)
-        device = argv[1];
-    else
-        device = "hw:1,0";
-    */
-    std::cout << "[INFO] Starting Audio Streamer on device: " << device << std::endl;
+// pass config files to function
+int main(int argc, char **argv)
+{
+    
+    // Set up Serial Communication
+    MessageHandler handler;
+    handler.SetDevice(SerialReader::Device::Arduino);
+    handler.SetMessageHandler(Messages::AmbientModeMsg, process_message);
+    handler.Start();
+    
 
+    // Load LED Configuration
+    LEDConfiguration Lconfig;
+    Lconfig.LoadConfig("../config/led.conf");
+
+    // Initialize LED Controller
+    LEDController controller(Lconfig.numLeds, Lconfig.brightness);
+
+    // Load Audio Configuration
+    Audio::AudioConfiguration Aconfig;
+    Aconfig.LoadConfig("../config/audio.conf");
 
     // Initialize Audio Stream
-    Audio::Streamer streamer(device);
+    Audio::Streamer streamer(Aconfig);
 
-    // Initialize SDL Application
-    CApp app(800, 400, &streamer);
-    if (app.Initialize())
+    // Initialize LED Ensemble
+    Ensemble ensemble(Lconfig, controller, &streamer);
+
+    // Start threads
+    if (ensemble.Initialize())
     {
         // Start Audio Stream
         streamer.Start();
 
-        // Start SDL Loop
-        app.Start();
+        // Start Ensemble Loop
+        ensemble.Start();
 
     }
 

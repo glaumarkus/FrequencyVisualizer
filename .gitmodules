@@ -1,3 +1,6 @@
 [submodule "dependencies/RaspberryPiAudio"]
 	path = dependencies/RaspberryPiAudio
 	url = https://github.com/glaumarkus/RaspberryPiAudio.git
+[submodule "dependencies/rpi_ws281x"]
+	path = dependencies/rpi_ws281x
+	url = https://github.com/jgarff/rpi_ws281x.git
