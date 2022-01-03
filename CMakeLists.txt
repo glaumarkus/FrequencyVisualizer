@@ -18,6 +18,8 @@ add_subdirectory(
     ${PROJECT_SOURCE_DIR}/dependencies/RaspberryPiAudio
 )
 
+if (FALSE)
+
 # add executable
 add_executable(
     LED_VISUALIZER 
@@ -53,6 +55,16 @@ target_link_libraries(
     LED_VISUALIZER PUBLIC
     AudioLib
 )
+
+endif()
+
+add_executable(SS serialtest.cpp src/SerialMessage.cpp src/SerialReader.cpp)
+# set includes
+target_include_directories(
+    SS PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -6,6 +6,7 @@
 
 #pragma once
 
+
 // message types
 enum Messages : uint8_t
 {
@@ -13,8 +14,9 @@ enum Messages : uint8_t
     Brightness = 1,     // change brighness
     FFTScale = 2,       // update FFTScale
     DBScale = 3,        // update DB Scale
-    MusicModeMsg = 4,      // change to music mode
-    AmbientModeMsg = 5,    // change to ambient
+    SilentModeMsg = 10,
+    MusicModeMsg = 11,      // change to music mode
+    AmbientModeMsg = 12,    // change to ambient
     Red = 6,            // change r component of ambient
     Green = 7,          // change g component of ambient
     Blue = 8,           // change b component of ambient
