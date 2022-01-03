@@ -57,9 +57,10 @@ static Messages state_msg = Messages::SilentModeMsg;
 template <typename T>
 void send_message(Messages msg, T value)
 {
-    Serial.print(msg);
-    Serial.print(" ");
-    Serial.println(value);
+    // cast to uint8_t 
+    uint8_t* buffer = reinterpret_cast<uint8_t*>(&value);
+    Serial.write(msg);
+    Serial.write(buffer, sizeof(T));
 }
 
 

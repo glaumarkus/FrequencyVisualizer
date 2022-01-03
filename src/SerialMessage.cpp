@@ -7,8 +7,13 @@ MessageHandler::MessageHandler()
 MessageHandler::~MessageHandler()
 {
     Stop();
+    if (m_reading.joinable())
+        m_reading.join();
+    std::cout << "Stopped Reading Serial\n";
     if (m_thread.joinable())
         m_thread.join();
+    std::cout << "Stopped Processing Messages\n";
+
 }
 
 bool MessageHandler::SetDevice(SerialReader::Device device)
@@ -23,6 +28,16 @@ void MessageHandler::SetMessageHandler(Messages type, std::function<void(float)>
 
 void MessageHandler::Start()
 {
+    m_reading = std::thread([this]()
+    {
+        while(!m_stop.load(std::memory_order_relaxed))
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            m_reader.Read();
+        }
+            
+    });
+
     m_thread = std::thread([this]()
     {
         while(!m_stop.load(std::memory_order_relaxed))
@@ -41,7 +56,7 @@ void MessageHandler::Stop()
     m_stop = true;
 }
 
-void MessageHandler::OnMessage(const std::string& in)
+void MessageHandler::OnMessage(const MessageFormat& in)
 {
     /*
     e.g.
@@ -50,15 +65,9 @@ void MessageHandler::OnMessage(const std::string& in)
     4 1
     5 1
     */
-    // interprete first byte
-    auto t = static_cast<Messages>(in.data()[0]);
-    float content;
-    if (t < 9)
-        content = std::stof(in.substr(1));
-    else
-        return;
 
     // call with input
-    auto f = m_handler[t];
-    f(content);
+    auto f = m_handler[static_cast<Messages>(in.msg)];
+    std::cout << "Received Message: " << (int)in.msg << "\n";
+    f(in.val);
 }

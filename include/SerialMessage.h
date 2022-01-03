@@ -33,6 +33,7 @@ enum States : uint8_t
 
 
 
+
 class MessageHandler
 {
 public:
@@ -47,10 +48,12 @@ public:
 
 private:
 
-    void OnMessage(const std::string& in);
+    void OnMessage(const MessageFormat& in);
     std::atomic<bool> m_stop {false}; 
     SerialReader m_reader;
     std::unordered_map<Messages, std::function<void(float)>> m_handler;
+
+    std::thread m_reading;
     std::thread m_thread;
 };
 

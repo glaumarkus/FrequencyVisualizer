@@ -22,6 +22,13 @@ static const std::string ARDUINO = "/dev/ttyACM0";
 // buffer size
 constexpr size_t BUFFER_SIZE = 256;
 
+// return struct
+struct MessageFormat
+{
+    uint8_t msg;
+    float val;
+};
+
 class SerialReader
 {
 public:
@@ -34,19 +41,21 @@ public:
     SerialReader();
     ~SerialReader();
 
+    void Read();        // run in async
     void Write(const std::string& msgOut);
     bool SetDevice(Device device); 
-    tsqueue<std::string>& GetQueue();
+    tsqueue<MessageFormat>& GetQueue();
 
 private:
 
-    void Read();        // run in async
+    void* m_inputprocessor;
+
     const std::string& GetDevicePath();
 
     Device m_device;
     int m_port;
     unsigned char m_buffer[BUFFER_SIZE];
-    tsqueue<std::string> m_msg;
+    tsqueue<MessageFormat> m_msg;
     
 };
 

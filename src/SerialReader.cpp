@@ -6,18 +6,69 @@ void SerialReader::Write(const std::string& msgOut)
     write(m_port, msgOut.c_str(), msgOut.size());
 }
 
-tsqueue<std::string>& SerialReader::GetQueue()
+tsqueue<MessageFormat>& SerialReader::GetQueue()
 {
     return m_msg;
+}
+
+float ReverseFloat( const float inFloat )
+{
+   float retVal;
+   char *floatToConvert = ( char* ) & inFloat;
+   char *returnFloat = ( char* ) & retVal;
+
+   // swap the bytes into a temporary buffer
+   returnFloat[0] = floatToConvert[3];
+   returnFloat[1] = floatToConvert[2];
+   returnFloat[2] = floatToConvert[1];
+   returnFloat[3] = floatToConvert[0];
+
+   return retVal;
 }
 
 void SerialReader::Read()
 {
     size_t n = read(m_port, &m_buffer, BUFFER_SIZE);
-    std::string msgIn;
-    msgIn.resize(n);
-    std::memcpy((void*)msgIn.data(), m_buffer, n);
-    m_msg.push_back(msgIn);
+    if (n == 0) return;
+
+    // message format
+    // uint8_t -> type  -> 1 byte
+    // flaot   -> value -> 4 bytes
+
+    size_t start = 0;
+    while (start < n)
+    {
+        uint8_t type = m_buffer[start];
+        float value;
+        memcpy(&value, &m_buffer[start + 1], sizeof(float));
+        m_msg.push_back({type, value});
+        start += 5;
+    }
+
+    /*
+    
+    // build messages
+    unsigned char* start = m_buffer;
+    unsigned char* space = m_buffer;
+    unsigned char* end = start + 1;
+
+    // traverse 
+    while ( end != m_buffer + n)
+    {   
+        // find message type
+        while (*space != ' ')
+            space++;
+        
+        end = space + 1;
+        // increment untill message complete
+        while (*end != '\r')
+            end++;
+
+        // 12 1.00\r
+    }
+    */
+    
+    // 11 00\r 11 1.00
 }
 
 
@@ -70,8 +121,8 @@ bool SerialReader::SetDevice(Device device)
     // tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
     // tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
 
-    tty.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
-    tty.c_cc[VMIN] = 0;
+    tty.c_cc[VTIME] = 232;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
+    tty.c_cc[VMIN] = 5;      // Wait for 5 bytes
 
     // Set in/out baud rate to be 9600
     cfsetispeed(&tty, B9600);
